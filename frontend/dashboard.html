@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header>
+        <h1 class="dashboard-heading">Dashboard</h1><br>
+    </header>
+
+    <h2>Expenses</h2>
+    <p class="catchy-statement">Track your spending and stay on top of your finances effortlessly!</p>
+    
+    <form id="expenseForm">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="number" id="amount" placeholder="Amount" required>
+        <input type="datetime-local" id="date" required>
+        <button type="submit">Add Expense</button>
+    </form>
+
+    <table id="expenseList">
+        <thead>
+            <tr>
+                <th>Expense</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Expense rows will be added here by JavaScript -->
+        </tbody>
+    </table>
+
+    <script src="./js/main.js"></script>
+    <button id="logoutBtn" class="small-button">Logout</button>
+
+    <footer class="footer">
+        <p>&copy; <span id="year">2024</span> Edwards. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
