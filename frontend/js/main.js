@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const expenseForm = document.getElementById('expenseForm');
     const logoutBtn = document.getElementById('logoutBtn');
-    const expenseList = document.getElementById('expenseList') 
-                        ? document.getElementById('expenseList').getElementsByTagName('tbody')[0] 
-                        : null;
+    const expenseList = document.getElementById('expenseList').getElementsByTagName('tbody')[0]; // Access tbody directly
 
     // Register User
     if (registerForm) {
@@ -17,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch('http://localhost:5000/api/auth/register', {
+                const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch('http://localhost:5000/api/auth/login', {
+                const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -81,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
 
             try {
-                const res = await fetch('http://localhost:5000/api/expenses', {
+                const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/expenses', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -109,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
 
         try {
-            const res = await fetch('http://localhost:5000/api/expenses', {
+            const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/expenses', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -125,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${expense.title}</td>
-                        <td>Ksh ${expense.amount}</td>
+                        <td>KSh ${expense.amount}</td>
                         <td>${formattedDate}</td>
                     `;
                     expenseList.appendChild(row);
@@ -145,10 +143,5 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('token');
             window.location.href = 'login.html';
         });
-    }
-
-    // Ensure expenses are loaded if expenseList exists
-    if (expenseList) {
-        loadExpenses();
     }
 });
