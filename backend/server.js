@@ -5,16 +5,21 @@ const bcrypt = require('bcrypt');
 const app = express();
 const db = require('./config/db');
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+    origin: 'https://expense-tracker-4el8.onrender.com', // Allow requests only from this origin
+    methods: ['GET', 'POST'], // Allow only GET and POST requests
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers in requests
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Route to register a new user
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
-        // Hash the password before storing it
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const [result] = await db.query(
             'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
             [name, email, hashedPassword]
@@ -30,7 +35,6 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Fetch the user from the database
         const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 
         if (rows.length === 0) {
@@ -38,15 +42,12 @@ app.post('/api/auth/login', async (req, res) => {
         }
 
         const user = rows[0];
-
-        // Compare the provided password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Generate a JWT token
         const token = jwt.sign({ id: user.id, email: user.email }, 'Nicekiddo', { expiresIn: '1h' });
 
         res.status(200).json({ token });
@@ -62,7 +63,7 @@ app.get('/api/expenses', async (req, res) => {
         const [rows] = await db.query('SELECT * FROM expenses');
         res.json(rows.map(expense => ({
             ...expense,
-            date: new Date(expense.date).toISOString() // Ensuring date is in ISO format
+            date: new Date(expense.date).toISOString()
         })));
     } catch (err) {
         res.status(500).json({ error: err.message });
