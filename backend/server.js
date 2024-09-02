@@ -4,15 +4,22 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
 const db = require('./config/db');
+const authRoutes = require('./routes/auth'); // Adjust the path as needed
+app.use('/api/auth', authRoutes);
 
-// CORS configuration
+
+// Unified CORS configuration
 const corsOptions = {
-    origin: 'https://expense-tracker-4el8.onrender.com', // Allow requests only from this origin
-    methods: ['GET', 'POST'], // Allow only GET and POST requests
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers in requests
+    origin: ['http://127.0.0.1:5500', 'https://expense-tracker-4el8.onrender.com', 'https://expense-tracker-6e3c.onrender.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Use the unified CORS configuration
+app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(express.json());
 
 // Route to register a new user
@@ -66,7 +73,8 @@ app.get('/api/expenses', async (req, res) => {
             date: new Date(expense.date).toISOString()
         })));
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error('Error fetching expenses:', err);
+        res.status(500).json({ error: 'An error occurred while fetching expenses.' });
     }
 });
 
@@ -85,7 +93,8 @@ app.post('/api/expenses', async (req, res) => {
     }
 });
 
-const PORT = 5000;
+// Set the server to listen on the provided port, or default to 5000
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

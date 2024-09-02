@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const expenseForm = document.getElementById('expenseForm');
     const logoutBtn = document.getElementById('logoutBtn');
+    
     //const expenseList = document.getElementById('expenseList').getElementsByTagName('tbody')[0]; // Access tbody directly
 
     // Register User
