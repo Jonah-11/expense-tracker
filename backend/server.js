@@ -22,13 +22,14 @@ app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // Session configuration
 app.use(session({
-    secret: 'chapaiifahm098', // Use a strong secret key
+    store: new RedisStore({ client: redisClient }),
+    secret: 'chapaifahm098',
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
         secure: false, // Set to true if using HTTPS
-        maxAge: 60 * 60 * 1000, // Session expiration time (1 hour)
+        maxAge: 60 * 60 * 1000, // 1 hour
     },
 }));
 
