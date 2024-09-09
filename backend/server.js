@@ -11,16 +11,18 @@ app.use(express.json()); // Middleware for parsing JSON bodies
 
 // Unified CORS configuration
 const corsOptions = {
-    origin: ['https://main--the-001-finance-manager.netlify.app'],
+    origin: ['https://main--the-001-finance-manager.netlify.app'], // Add more origins as needed
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
+    credentials: true,
 };
 
-app.use(cors(corsOptions)); // Use the unified CORS configuration
+app.use(cors(corsOptions)); // Apply CORS configuration to all routes
 app.options('*', cors(corsOptions)); // Handle preflight requests
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 // Route to register a new user
 app.post('/api/auth/register', async (req, res) => {
