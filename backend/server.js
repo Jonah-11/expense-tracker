@@ -22,7 +22,7 @@ app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // Session configuration
 app.use(session({
-    secret: 'your-secret-key', // Use a strong secret key
+    secret: 'chapaiifahm098', // Use a strong secret key
     resave: false,
     saveUninitialized: false,
     cookie: {
