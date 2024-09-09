@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    const data = await res.json();
                     alert('Registration successful. Please log in.');
                     window.location.href = './login.html'; // Ensure path is correct
                 } else {
@@ -56,8 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    const data = await res.json();
-                    localStorage.setItem('token', data.token);
+                    // Assuming successful login sets a session cookie
                     window.location.href = './dashboard.html'; // Ensure path is correct
                 } else {
                     const data = await res.json();
@@ -77,14 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title').value;
             const amount = document.getElementById('amount').value;
             const date = document.getElementById('date').value;
-            const token = localStorage.getItem('token');
 
             try {
                 const res = await fetch(`${apiUrl}/expenses`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        // If using sessions, no need for Authorization header
                     },
                     body: JSON.stringify({ title, amount, date })
                 });
@@ -105,14 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Expenses
     async function loadExpenses() {
-        const token = localStorage.getItem('token');
-
         try {
             const res = await fetch(`${apiUrl}/expenses`, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                // If using sessions, no need for Authorization header
             });
 
             if (res.ok) {
@@ -142,8 +135,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Logout
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('token');
-            window.location.href = './login.html'; // Ensure path is correct
+            // Assuming logout clears the session on the server
+            fetch(`${apiUrl}/auth/logout`, {
+                method: 'POST',
+                credentials: 'include' // Send cookies with the request
+            }).then(() => {
+                window.location.href = './login.html'; // Ensure path is correct
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         });
+    }
+
+    // Load expenses on dashboard load
+    if (window.location.pathname.includes('dashboard.html')) {
+        loadExpenses();
     }
 });
