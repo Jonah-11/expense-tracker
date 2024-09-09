@@ -51,11 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include' // Include cookies for session handling
                 });
 
                 if (res.ok) {
-                    // Assuming successful login sets a session cookie
                     window.location.href = './dashboard.html'; // Ensure path is correct
                 } else {
                     const data = await res.json();
@@ -80,10 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch(`${apiUrl}/expenses`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        // If using sessions, no need for Authorization header
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ title, amount, date })
+                    body: JSON.stringify({ title, amount, date }),
+                    credentials: 'include' // Include cookies for session handling
                 });
 
                 if (res.ok) {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(`${apiUrl}/expenses`, {
                 method: 'GET',
-                // If using sessions, no need for Authorization header
+                credentials: 'include' // Include cookies for session handling
             });
 
             if (res.ok) {
@@ -135,10 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Logout
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            // Assuming logout clears the session on the server
             fetch(`${apiUrl}/auth/logout`, {
                 method: 'POST',
-                credentials: 'include' // Send cookies with the request
+                credentials: 'include' // Include cookies for session handling
             }).then(() => {
                 window.location.href = './login.html'; // Ensure path is correct
             }).catch(error => {
