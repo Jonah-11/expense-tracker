@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const expenseForm = document.getElementById('expenseForm');
     const logoutBtn = document.getElementById('logoutBtn');
     const expenseList = document.getElementById('expenseList')?.getElementsByTagName('tbody')[0]; // Access tbody if it exists
-    const apiUrl = 'https://expense-tracker-production-ebd7.up.railway.app/api';
+    const apiUrl = 'http://expense-tracker-production-ebd7.up.railway.app/api';
 
     // Register User
     if (registerForm) {
