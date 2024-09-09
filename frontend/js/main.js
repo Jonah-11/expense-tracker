@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const expenseForm = document.getElementById('expenseForm');
     const logoutBtn = document.getElementById('logoutBtn');
     const expenseList = document.getElementById('expenseList')?.getElementsByTagName('tbody')[0]; // Access tbody if it exists
+    const apiUrl = 'https://expense-tracker-production-ebd7.up.railway.app/api';
 
     // Register User
     if (registerForm) {
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/auth/register', {
+                const res = await fetch(`${apiUrl}/auth/register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/auth/login', {
+                const res = await fetch(`${apiUrl}/auth/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
 
             try {
-                const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/expenses', {
+                const res = await fetch(`${apiUrl}/expenses`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
 
         try {
-            const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/expenses', {
+            const res = await fetch(`${apiUrl}/expenses`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
