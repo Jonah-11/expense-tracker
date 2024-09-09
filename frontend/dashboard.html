@@ -5,41 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="./css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1 class="dashboard-heading">Dashboard</h1><br>
+    <header class="dashboard-header">
+        <h1 class="dashboard-heading">Dashboard</h1>
     </header>
 
-    <h2>Expenses</h2>
-    <p class="catchy-statement">Track your spending and stay on top of your finances effortlessly!</p>
-    
-    <form id="expenseForm">
-        <input type="text" id="title" placeholder="Title" required>
-        <input type="number" id="amount" placeholder="Amount" required>
-        <input type="datetime-local" id="date" required>
-        <button type="submit">Add Expense</button>
-    </form>
+    <main class="main-content">
+        <section class="expense-section">
+            <h2>Expenses</h2>
+            <p class="catchy-statement">Track your spending and stay on top of your finances effortlessly!</p>
 
-    <table id="expenseList">
-        <thead>
-            <tr>
-                <th>Expense</th>
-                <th>Amount</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Expense rows will be added here by JavaScript -->
-        </tbody>
-    </table>
+            <form id="expenseForm" class="expense-form">
+                <input type="text" id="title" placeholder="Title" required>
+                <input type="number" id="amount" placeholder="Amount" required>
+                <input type="datetime-local" id="date" required>
+                <button type="submit" class="btn-add">Add Expense</button>
+            </form>
 
-    <script src="./js/main.js"></script>
-    <button id="logoutBtn" class="small-button">Logout</button>
+            <table id="expenseList" class="expense-table">
+                <thead>
+                    <tr>
+                        <th>Expense</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Expense rows will be added here by JavaScript -->
+                </tbody>
+            </table>
+
+            <button id="logoutBtn" class="small-button btn-logout">Logout</button>
+        </section>
+    </main>
 
     <footer class="footer">
         <p>&copy; <span id="year">2024</span> Edwards. All rights reserved.</p>
     </footer>
 
+    <script src="js/main.js"></script>
 </body>
 </html>

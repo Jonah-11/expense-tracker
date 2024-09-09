@@ -8,18 +8,27 @@
 </head>
 <body>
     <div class="container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+        <h2>Log in</h2>
+        <div class="form-text-wrapper">
+            <!-- Left div for additional text or content -->
+            <div class="text-section">
+                <p>Welcome back! Please enter your login credentials to access your account.</p>
             </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+            <!-- Right div containing the login form -->
+            <div class="form-section">
+                <form id="loginForm">
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
             </div>
-            <button type="submit">Login</button>
-        </form>
+        </div>
         <p>Don't have an account? <a href="register.html">Register here</a>.</p>
     </div>
 

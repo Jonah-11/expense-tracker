@@ -4,9 +4,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
 const db = require('./config/db');
-const authRoutes = require('./routes/auth'); // Adjust the path as needed
-app.use('/api/auth', authRoutes);
+const authRoutes = require('./routes/auth.js'); // Adjust the path as needed
+const expenseRoutes = require('./routes/expenses.js');
 
+app.use('/api/auth', authRoutes);
+app.use('/api/auth', require('./routes/auth.js'));
+app.use('/api/expenses', require('./routes/expenses.js'));
 
 // Unified CORS configuration
 const corsOptions = {

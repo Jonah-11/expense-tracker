@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const expenseForm = document.getElementById('expenseForm');
     const logoutBtn = document.getElementById('logoutBtn');
-    
-    //const expenseList = document.getElementById('expenseList').getElementsByTagName('tbody')[0]; // Access tbody directly
+    const expenseList = document.getElementById('expenseList')?.getElementsByTagName('tbody')[0]; // Access tbody if it exists
 
     // Register User
     if (registerForm) {
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/auth/register', {
+                const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -27,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     const data = await res.json();
                     alert('Registration successful. Please log in.');
-                    window.location.href = 'login.html';
+                    window.location.href = './login.html'; // Ensure path is correct
                 } else {
                     const data = await res.json();
                     alert(`Error: ${data.message}`);
@@ -47,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/auth/login', {
+                const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     const data = await res.json();
                     localStorage.setItem('token', data.token);
-                    window.location.href = 'dashboard.html';
+                    window.location.href = './dashboard.html'; // Ensure path is correct
                 } else {
                     const data = await res.json();
                     alert(`Error: ${data.message}`);
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
 
             try {
-                const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/expenses', {
+                const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/expenses', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
 
         try {
-            const res = await fetch('https://expense-tracker-6e3c.onrender.com/api/expenses', {
+            const res = await fetch('http://expense-tracker-production-ebd7.up.railway.app/api/expenses', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -117,18 +116,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (res.ok) {
                 const expenses = await res.json();
-                expenseList.innerHTML = '';
-
-                expenses.forEach(expense => {
-                    const formattedDate = new Date(expense.date).toLocaleDateString('en-GB'); // Format date as dd/mm/yyyy
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${expense.title}</td>
-                        <td>KSh ${expense.amount}</td>
-                        <td>${formattedDate}</td>
-                    `;
-                    expenseList.appendChild(row);
-                });
+                if (expenseList) {
+                    expenseList.innerHTML = '';
+                    expenses.forEach(expense => {
+                        const formattedDate = new Date(expense.date).toLocaleDateString('en-GB'); // Format date as dd/mm/yyyy
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${expense.title}</td>
+                            <td>KSh ${expense.amount}</td>
+                            <td>${formattedDate}</td>
+                        `;
+                        expenseList.appendChild(row);
+                    });
+                }
             } else {
                 const data = await res.json();
                 alert(`Error: ${data.message}`);
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('token');
-            window.location.href = 'login.html';
+            window.location.href = './login.html'; // Ensure path is correct
         });
     }
 });

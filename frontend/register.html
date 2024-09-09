@@ -9,21 +9,30 @@
 <body>
     <div class="container">
         <h2>Register</h2>
-        <form id="registerForm">
-            <div>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
+        <div class="form-text-wrapper">
+            <!-- Left div for additional text or content -->
+            <div class="text-section">
+                <p>Welcome to the registration page! Please fill in your details to create an account.</p>
             </div>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+            <!-- Right div containing the registration form -->
+            <div class="form-section">
+                <form id="registerForm">
+                    <div>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
             </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Register</button>
-        </form>
+        </div>
         <p>Already have an account? <a href="login.html">Login here</a>.</p>
     </div>
 
@@ -31,6 +40,6 @@
         <p>&copy; <span id="year">2024</span> Edwards. All rights reserved.</p>
     </footer>
 
-     <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
