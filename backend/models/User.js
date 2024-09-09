@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 // Create a MySQL connection pool
 const pool = mysql.createPool({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
   database: 'expense_tracker_uno',
   password: 'derniermetro000.'
