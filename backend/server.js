@@ -62,14 +62,14 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'defaultsecret', { expiresIn: '1h' });
-
-        res.status(200).json({ token });
+        // Send success response without token
+        res.status(200).json({ message: 'Login successful' });
     } catch (err) {
         console.error('Error during login:', err);
         res.status(500).json({ error: 'An error occurred during login.' });
     }
 });
+
 
 // Route to fetch expenses
 app.get('/api/expenses', async (req, res) => {
