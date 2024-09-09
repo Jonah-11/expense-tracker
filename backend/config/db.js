@@ -2,11 +2,10 @@ const mysql = require('mysql2/promise');
 require("dotenv").config();
 
 const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST || '127.0.0.1',
+  host: process.env.MYSQL_HOST || 'mysql.railway.internal',
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '',
-  database: process.env.MYSQL_DATABASE || 'expense_tracker_uno',
-  port: process.env.MYSQL_PORT || 3306
+  password: process.env.MYSQL_PASSWORD || 'TwxzBfuunzLHLbdqdtVQIkJzozhRFbLQ',
+  database: process.env.MYSQL_DATABASE || 'railway',
 });
 
 module.exports = pool;
