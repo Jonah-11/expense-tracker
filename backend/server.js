@@ -11,7 +11,7 @@ app.use(express.json()); // Middleware for parsing JSON bodies
 
 // Unified CORS configuration
 const corsOptions = {
-    origin: ['http://127.0.0.1:5500', 'https://expense-tracker-4el8.onrender.com', 'https://expense-tracker-6e3c.onrender.com'],
+    origin: ['https://main--the-001-finance-manager.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
