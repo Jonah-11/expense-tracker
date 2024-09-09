@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = './login.html'; // Ensure path is correct
                 } else {
                     const data = await res.json();
-                    alert(`Error: ${data.message}`);
+                    alert(`Error: ${data.error || data.message}`);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred during registration.');
             }
         });
     }
@@ -59,10 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = './dashboard.html'; // Ensure path is correct
                 } else {
                     const data = await res.json();
-                    alert(`Error: ${data.message}`);
+                    alert(`Error: ${data.error || data.message}`);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred during login.');
             }
         });
     }
@@ -88,14 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     alert('Expense added successfully');
-                    loadExpenses();
+                    loadExpenses(); // Reload expenses after adding
                     expenseForm.reset();
                 } else {
                     const data = await res.json();
-                    alert(`Error: ${data.message}`);
+                    alert(`Error: ${data.error || data.message}`);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred while adding the expense.');
             }
         });
     }
@@ -111,13 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 const expenses = await res.json();
                 if (expenseList) {
-                    expenseList.innerHTML = '';
+                    expenseList.innerHTML = ''; // Clear existing rows
                     expenses.forEach(expense => {
                         const formattedDate = new Date(expense.date).toLocaleDateString('en-GB'); // Format date as dd/mm/yyyy
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${expense.title}</td>
-                            <td>KSh ${expense.amount}</td>
+                            <td>KSh ${expense.amount.toFixed(2)}</td> <!-- Format amount to two decimal places -->
                             <td>${formattedDate}</td>
                         `;
                         expenseList.appendChild(row);
@@ -125,10 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 const data = await res.json();
-                alert(`Error: ${data.message}`);
+                alert(`Error: ${data.error || data.message}`);
             }
         } catch (error) {
             console.error('Error:', error);
+            alert('An error occurred while fetching expenses.');
         }
     }
 
@@ -142,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = './login.html'; // Ensure path is correct
             }).catch(error => {
                 console.error('Error:', error);
+                alert('An error occurred during logout.');
             });
         });
     }
