@@ -4,12 +4,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
 const db = require('./config/db');
-const authRoutes = require('./routes/auth.js'); // Adjust the path as needed
+const authRoutes = require('./routes/auth.js');
 const expenseRoutes = require('./routes/expenses.js');
 
-app.use('/api/auth', authRoutes);
-app.use('/api/auth', require('./routes/auth.js'));
-app.use('/api/expenses', require('./routes/expenses.js'));
+app.use(express.json()); // Middleware for parsing JSON bodies
 
 // Unified CORS configuration
 const corsOptions = {
@@ -23,11 +21,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Use the unified CORS configuration
 app.options('*', cors(corsOptions)); // Handle preflight requests
-app.use(express.json());
 
 // Route to register a new user
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const [result] = await db.query(
@@ -44,9 +44,11 @@ app.post('/api/auth/register', async (req, res) => {
 // Route to login a user
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
     try {
         const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-
         if (rows.length === 0) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
@@ -58,7 +60,7 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, 'Nicekiddo', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'defaultsecret', { expiresIn: '1h' });
 
         res.status(200).json({ token });
     } catch (err) {
@@ -84,6 +86,9 @@ app.get('/api/expenses', async (req, res) => {
 // Route to add an expense
 app.post('/api/expenses', async (req, res) => {
     const { title, amount, date } = req.body;
+    if (!title || !amount || !date) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
     try {
         const [result] = await db.query(
             'INSERT INTO expenses (title, amount, date) VALUES (?, ?, ?)',
