@@ -1,8 +1,11 @@
 const mysql = require('mysql2/promise');
 require("dotenv").config();
 
-const urlDB = `mysql://$root:FonhDsYjtYDarXOeATpnhsDSCvUHNPyO@mysql.railway.internal:3306/railway`
-
-const pool = mysql.createPool(urlDB);
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'derniermetro000.',
+  database: 'expense_tracker_uno'
+});
 
 module.exports = pool;
