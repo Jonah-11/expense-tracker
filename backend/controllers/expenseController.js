@@ -1,4 +1,4 @@
-const Expense = require('../models/Expense.js');
+const Expense = require('../models/Expense');
 
 // Controller to create a new expense
 exports.createExpense = async (req, res) => {

@@ -1,4 +1,4 @@
-// authMiddleware.js
+// middleware/authMiddleware.js
 
 // Middleware to protect routes (using session-based authentication)
 exports.protect = (req, res, next) => {

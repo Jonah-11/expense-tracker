@@ -1,20 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 const session = require('express-session');
-const RedisStore = require('connect-redis').default; // Corrected import
+const RedisStore = require('connect-redis').default;
 const redis = require('redis');
 const db = require('./config/db');
-const authRoutes = require('./routes/auth.js');
-const expenseRoutes = require('./routes/expenses.js');
+const authRoutes = require('./routes/auth');
+const expenseRoutes = require('./routes/expenses');
 
 const app = express();
 
 // Create a Redis client
 const redisClient = redis.createClient({
     socket: {
-        host: 'localhost', // Adjust if Redis is hosted elsewhere
-        port: 6379,        // Default Redis port
+        host: 'localhost',
+        port: 6379,
     }
 });
 
