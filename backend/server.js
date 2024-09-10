@@ -13,7 +13,7 @@ const app = express();
 // Create a Redis client
 const redisClient = redis.createClient({
     socket: {
-        host: 'localhost', // Adjust this if your Redis server is on a different host
+        host: 'localhost', // Adjust if Redis is hosted elsewhere
         port: 6379,        // Default Redis port
     }
 });
@@ -21,20 +21,9 @@ const redisClient = redis.createClient({
 // Connect to Redis
 redisClient.connect().catch(console.error);
 
-app.use(express.json()); // Middleware for parsing JSON bodies
+redisClient.on('error', (err) => console.error('Redis Client Error', err));
 
-// Unified CORS configuration
-const corsOptions = {
-    origin: 'https://the-001-finance-manager.netlify.app', // Your frontend domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-    credentials: true, // Enable credentials (cookies)
-};
-
-app.use(cors(corsOptions)); // Apply CORS configuration to all routes
-app.options('*', cors(corsOptions)); // Handle preflight requests
-
-// Session configuration
+// Session configuration using RedisStore
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'chapaifahm098',
@@ -46,6 +35,19 @@ app.use(session({
         maxAge: 60 * 60 * 1000, // 1 hour
     },
 }));
+
+app.use(express.json()); // Middleware for parsing JSON bodies
+
+// CORS configuration
+const corsOptions = {
+    origin: 'https://the-001-finance-manager.netlify.app', // Your frontend domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true, // Allow credentials (cookies)
+};
+
+app.use(cors(corsOptions)); // Apply CORS settings
+app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // Middleware to check if the user is authenticated
 function isAuthenticated(req, res, next) {
