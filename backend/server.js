@@ -2,11 +2,21 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
 const db = require('./config/db');
 const authRoutes = require('./routes/auth.js');
 const expenseRoutes = require('./routes/expenses.js');
 
 const app = express();
+const redisClient = redis.createClient({
+    host: 'localhost', // Adjust if your Redis server is on a different host
+    port: 6379 // Default Redis port
+});
+
+// Handle Redis connection errors
+redisClient.on('error', (err) => console.error('Redis error:', err));
+
 app.use(express.json()); // Middleware for parsing JSON bodies
 
 // Unified CORS configuration
