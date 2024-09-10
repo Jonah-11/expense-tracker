@@ -50,11 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password }),
-                    credentials: 'include'
+                    body: JSON.stringify({ email, password })
                 });
 
                 if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem('token', data.token); // Store JWT token in localStorage
                     window.location.href = './dashboard.html';
                 } else {
                     const data = await res.json();
@@ -76,13 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const date = document.getElementById('date').value;
 
             try {
+                const token = localStorage.getItem('token'); // Retrieve JWT token from localStorage
+
                 const res = await fetch(`${apiUrl}/expenses`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // Include JWT token in headers
                     },
-                    body: JSON.stringify({ title, amount, date }),
-                    credentials: 'include'
+                    body: JSON.stringify({ title, amount, date })
                 });
 
                 if (res.ok) {
@@ -103,9 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Expenses
     async function loadExpenses() {
         try {
+            const token = localStorage.getItem('token'); // Retrieve JWT token from localStorage
+
             const res = await fetch(`${apiUrl}/expenses`, {
                 method: 'GET',
-                credentials: 'include'
+                headers: {
+                    'Authorization': `Bearer ${token}` // Include JWT token in headers
+                }
             });
 
             if (res.ok) {
@@ -139,8 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 await fetch(`${apiUrl}/auth/logout`, {
                     method: 'POST',
-                    credentials: 'include'
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Include JWT token in headers
+                    }
                 });
+                localStorage.removeItem('token'); // Remove JWT token from localStorage
                 window.location.href = './login.html';
             } catch (error) {
                 console.error('Error:', error);

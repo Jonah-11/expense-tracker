@@ -1,41 +1,16 @@
+require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const cors = require('cors');
-const session = require('express-session');
-const RedisStore = require('connect-redis').default;
-const redis = require('redis');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const db = require('./config/db');
 const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
 
 const app = express();
 
-// Create a Redis client
-const redisClient = redis.createClient({
-    socket: {
-        host: 'localhost',
-        port: 6379,
-    }
-});
-
-// Connect to Redis
-redisClient.connect().catch(console.error);
-
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
-
-// Session configuration using RedisStore
-app.use(session({
-    store: new RedisStore({ client: redisClient }),
-    secret: 'chapaifahm098',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        secure: false, // Set to true if using HTTPS
-        maxAge: 60 * 60 * 1000, // 1 hour
-    },
-}));
-
-app.use(express.json()); // Middleware for parsing JSON bodies
+// Middleware for parsing JSON bodies
+app.use(express.json());
 
 // CORS configuration
 const corsOptions = {
@@ -50,10 +25,14 @@ app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // Middleware to check if the user is authenticated
 function isAuthenticated(req, res, next) {
-    if (req.session && req.session.user) {
-        return next();
-    }
-    return res.status(401).json({ message: 'Unauthorized: No session available' });
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Unauthorized: No token provided' });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+        req.user = decoded; // Save user data to request object
+        next();
+    });
 }
 
 // Routes
@@ -98,9 +77,9 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Set user session
-        req.session.user = { id: user.id, name: user.name, email: user.email };
-        res.status(200).json({ message: 'Login successful' });
+        // Create a JWT token
+        const token = jwt.sign({ id: user.id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ token });
     } catch (err) {
         console.error('Error during login:', err);
         res.status(500).json({ error: 'An error occurred during login.' });
@@ -109,19 +88,14 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Route to logout a user
 app.post('/api/auth/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({ message: 'Failed to log out' });
-        }
-        res.clearCookie('connect.sid'); // Clear the session cookie
-        res.status(200).json({ message: 'Logout successful' });
-    });
+    // No specific action needed for logout in JWT-based authentication
+    res.status(200).json({ message: 'Logout successful' });
 });
 
 // Route to fetch expenses (requires authentication)
 app.get('/api/expenses', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM expenses WHERE user_id = ?', [req.session.user.id]);
+        const [rows] = await db.query('SELECT * FROM expenses WHERE user_id = ?', [req.user.id]);
         res.json(rows.map(expense => ({
             ...expense,
             date: new Date(expense.date).toISOString()
@@ -141,7 +115,7 @@ app.post('/api/expenses', async (req, res) => {
     try {
         const [result] = await db.query(
             'INSERT INTO expenses (title, amount, date, user_id) VALUES (?, ?, ?, ?)',
-            [title, amount, date, req.session.user.id]
+            [title, amount, date, req.user.id]
         );
         res.status(201).json({ id: result.insertId });
     } catch (err) {

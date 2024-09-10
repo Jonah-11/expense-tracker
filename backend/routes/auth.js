@@ -1,65 +1,59 @@
 const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../config/db'); // Adjust the path as needed
+const db = require('../config/db');
+const router = express.Router();
 
-// Route to register a new user
+// Registration Route
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
-
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
     try {
-        // Check if the user already exists
-        const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-
-        if (existingUser.length > 0) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Save the new user to the database
         const [result] = await db.query(
             'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
             [name, email, hashedPassword]
         );
-
-        res.status(201).json({ message: 'User registered successfully', id: result.insertId });
-    } catch (error) {
-        console.error('Error during registration:', error);
-        res.status(500).json({ message: 'An error occurred while registering the user' });
+        res.status(201).json({ id: result.insertId });
+    } catch (err) {
+        console.error('Error during registration:', err);
+        res.status(500).json({ error: 'An error occurred while registering the user.' });
     }
 });
 
-// Route to login a user
+// Login Route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
     try {
-        // Find the user by email
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-
-        if (users.length === 0) {
+        const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (rows.length === 0) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const user = users[0];
-
-        // Compare the provided password with the hashed password
+        const user = rows[0];
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Authentication successful; handle the response as needed
-        res.status(200).json({ message: 'Login successful', userId: user.id });
-    } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ message: 'An error occurred during login' });
+        const token = jwt.sign({ id: user.id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ message: 'Login successful', token });
+    } catch (err) {
+        console.error('Error during login:', err);
+        res.status(500).json({ error: 'An error occurred during login.' });
     }
 });
 
+// Logout Route
+router.post('/logout', (req, res) => {
+    // No server-side logout needed with JWT (client-side action)
+    res.status(200).json({ message: 'Logout successful' });
+});
 
 module.exports = router;
