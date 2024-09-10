@@ -1,10 +1,10 @@
-// controllers/expenseController.js
 const Expense = require('../models/Expense.js');
 
+// Controller to create a new expense
 exports.createExpense = async (req, res) => {
   try {
     const { title, amount, date } = req.body;
-    const user_id = req.user.id; // Ensure req.user is populated correctly
+    const user_id = req.session.user.id; // Ensure req.session.user is populated correctly
 
     // Validate input
     if (!title || !amount || !date) {
@@ -20,10 +20,10 @@ exports.createExpense = async (req, res) => {
   }
 };
 
-
+// Controller to get all expenses for the authenticated user
 exports.getExpenses = async (req, res) => {
   try {
-    const user_id = req.user.id; // Ensure req.user is populated correctly
+    const user_id = req.session.user.id; // Ensure req.session.user is populated correctly
 
     // Fetch expenses by user ID
     const expenses = await Expense.findAllByUserId(user_id);
