@@ -20,6 +20,7 @@ exports.createExpense = async (req, res) => {
   }
 };
 
+
 exports.getExpenses = async (req, res) => {
   try {
     const user_id = req.user.id; // Ensure req.user is populated correctly
