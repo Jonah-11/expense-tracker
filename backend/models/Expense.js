@@ -3,10 +3,10 @@ const mysql = require('mysql2/promise');
 
 // Create a MySQL connection pool
 const pool = mysql.createPool({
-  host: 'localhost',
+  host: 'mysql.railway.internal',
   user: 'root',
-  database: 'expense_tracker_uno',
-  password: 'derniermetro000.'
+  database: 'railway',
+  password: 'GJfDHQmissuQAbziIoZbdtWEtfnMTCir'
 });
 
 exports.create = async (expense) => {
