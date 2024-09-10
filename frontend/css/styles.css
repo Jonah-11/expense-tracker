@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-    background-image: url('./money.jpg') ;
+    background-image: url('./money.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -116,7 +116,7 @@ h2, .container h2 {
     display: inline-block;
     padding: 15px 30px;
     font-size: 1.1em;
-    color: white;
+    color: rgb(14, 13, 13);
     background-color: #ff6347; /* Tomato */
     border: none;
     border-radius: 50px;
@@ -142,6 +142,24 @@ h2, .container h2 {
     transform: translateY(-5px);
 }
 
+/* Specific Button Styles for Registration Page */
+#registerForm button {
+    background-color: #ff6347; /* Tomato */
+    color: white;
+}
+
+#loginForm button {
+    background-color: transparent;
+    border: 2px solid white;
+    color: rgb(84, 7, 227);
+}
+
+#loginForm button:hover {
+    background-color: white;
+    color: #007bff;
+}
+
+/* Dashboard Header */
 .dashboard-header {
     background-color: #007bff;
     color: white;
