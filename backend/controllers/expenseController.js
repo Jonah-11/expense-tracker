@@ -1,22 +1,34 @@
-const Expense = require('../models/Expense');
+// controllers/expenseController.js
+const Expense = require('../models/Expense.js');
 
-exports.createExpense = (req, res) => {
-  const { title, amount, date } = req.body;
-  const user_id = req.user.id;
+exports.createExpense = async (req, res) => {
+  try {
+    const { title, amount, date } = req.body;
+    const user_id = req.user.id; // Ensure req.user is populated correctly
 
-  Expense.create({ user_id, title, amount, date }, (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
+    // Validate input
+    if (!title || !amount || !date) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
 
-    res.status(201).json({ message: 'Expense added successfully' });
-  });
+    // Create a new expense
+    const result = await Expense.create({ user_id, title, amount, date });
+    res.status(201).json({ message: 'Expense added successfully', result });
+  } catch (err) {
+    console.error('Error creating expense:', err);
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.getExpenses = (req, res) => {
-  const user_id = req.user.id;
+exports.getExpenses = async (req, res) => {
+  try {
+    const user_id = req.user.id; // Ensure req.user is populated correctly
 
-  Expense.findAllByUserId(user_id, (err, expenses) => {
-    if (err) return res.status(500).json({ error: err.message });
-
+    // Fetch expenses by user ID
+    const expenses = await Expense.findAllByUserId(user_id);
     res.json(expenses);
-  });
+  } catch (err) {
+    console.error('Error fetching expenses:', err);
+    res.status(500).json({ error: err.message });
+  }
 };
