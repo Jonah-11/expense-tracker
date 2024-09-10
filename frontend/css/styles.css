@@ -131,7 +131,7 @@ h2, .container h2 {
 }
 
 .btn-outline {
-    background-color: transparent;
+    background-color: blue;
     border: 2px solid white;
     color: white;
 }
@@ -149,7 +149,7 @@ h2, .container h2 {
 }
 
 #loginForm button {
-    background-color: transparent;
+    background-color: rgb(139, 249, 30);
     border: 2px solid white;
     color: rgb(84, 7, 227);
 }
