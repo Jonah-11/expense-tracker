@@ -3,14 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const expenseForm = document.getElementById('expenseForm');
     const logoutBtn = document.getElementById('logoutBtn');
-    const expenseList = document.getElementById('expenseList')?.getElementsByTagName('tbody')[0]; // Access tbody if it exists
+    const expenseList = document.getElementById('expenseList')?.getElementsByTagName('tbody')[0];
     const apiUrl = 'https://expense-tracker-production-557f.up.railway.app/api';
 
     // Register User
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     alert('Registration successful. Please log in.');
-                    window.location.href = './login.html'; // Ensure path is correct
+                    window.location.href = './login.html';
                 } else {
                     const data = await res.json();
                     alert(`Error: ${data.error || data.message}`);
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -53,11 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ email, password }),
-                    credentials: 'include' // Include cookies for session handling
+                    credentials: 'include'
                 });
 
                 if (res.ok) {
-                    window.location.href = './dashboard.html'; // Ensure path is correct
+                    window.location.href = './dashboard.html';
                 } else {
                     const data = await res.json();
                     alert(`Error: ${data.error || data.message}`);
@@ -73,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (expenseForm) {
         expenseForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const title = document.getElementById('title').value;
             const amount = document.getElementById('amount').value;
             const date = document.getElementById('date').value;
@@ -85,12 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ title, amount, date }),
-                    credentials: 'include' // Include cookies for session handling
+                    credentials: 'include'
                 });
 
                 if (res.ok) {
                     alert('Expense added successfully');
-                    loadExpenses(); // Reload expenses after adding
+                    loadExpenses();
                     expenseForm.reset();
                 } else {
                     const data = await res.json();
@@ -108,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(`${apiUrl}/expenses`, {
                 method: 'GET',
-                credentials: 'include' // Include cookies for session handling
+                credentials: 'include'
             });
 
             if (res.ok) {
@@ -116,11 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (expenseList) {
                     expenseList.innerHTML = ''; // Clear existing rows
                     expenses.forEach(expense => {
-                        const formattedDate = new Date(expense.date).toLocaleDateString('en-GB'); // Format date as dd/mm/yyyy
+                        const formattedDate = new Date(expense.date).toLocaleDateString('en-GB');
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${expense.title}</td>
-                            <td>KSh ${expense.amount.toFixed(2)}</td> <!-- Format amount to two decimal places -->
+                            <td>KSh ${expense.amount.toFixed(2)}</td>
                             <td>${formattedDate}</td>
                         `;
                         expenseList.appendChild(row);
@@ -138,16 +135,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Logout
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            fetch(`${apiUrl}/auth/logout`, {
-                method: 'POST',
-                credentials: 'include' // Include cookies for session handling
-            }).then(() => {
-                window.location.href = './login.html'; // Ensure path is correct
-            }).catch(error => {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await fetch(`${apiUrl}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                window.location.href = './login.html';
+            } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred during logout.');
-            });
+            }
         });
     }
 
