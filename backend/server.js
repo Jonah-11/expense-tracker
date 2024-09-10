@@ -16,7 +16,7 @@ app.use(express.json());
 const corsOptions = {
     origin: 'https://the-001-finance-manager.netlify.app', // Your frontend domain
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Allow credentials (cookies)
 };
 
